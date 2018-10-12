@@ -20,7 +20,7 @@ public class Bcstank1Impl {
     @RequestMapping(value = "/helloworld",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    public String helloworld( @RequestParam(value = "name", required = true) String name){
+    public String helloworld( @RequestParam(value = "name", required = true) String name) throws Exception{
 
         return userBcstank1Delegate.helloworld(name);
     }

@@ -1,0 +1,137 @@
+name: "global-trade-network"
+
+x-type: "hlfv1"
+x-loggingLevel: info
+
+description: "The network to be in if you want to stay in the global trade business"
+
+version: 1.0.0
+
+client:
+
+  organization: f94cb52579151f11617f0bd878611a0db91023a9
+
+  logging:
+    level: info
+
+  peer:
+    timeout:
+      connection: 10s
+      queryResponse: 45s
+      executeTxResponse: 120s
+  eventService:
+    timeout:
+      connection: 10s
+      registrationResponse: 50s
+  orderer:
+    timeout:
+      connection: 10s
+      response: 45s
+
+  cryptoconfig:
+    path: /opt/gopath/src/github.com/hyperledger/fabric
+
+  credentialStore:
+    path: "/tmp/hfc-kvs"
+
+    cryptoStore:
+      path: /tmp/msp
+
+    wallet: wallet-name
+
+  BCCSP:
+    security:
+     enabled: true
+     default:
+      provider: "SW"
+     hashAlgorithm: "SHA2"
+     softVerify: true
+     ephemeral: false
+     level: 256
+
+channels:
+  
+  c12345:
+    orderers:
+      
+      - orderer-7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd-0.orderer-7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd.default.svc.cluster.local
+      
+    peers:
+      
+      peer-f94cb52579151f11617f0bd878611a0db91023a9-0.peer-f94cb52579151f11617f0bd878611a0db91023a9.default.svc.cluster.local:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      
+    chaincodes:
+      - javatestchaincode:2.2
+  
+organizations:
+  
+  f94cb52579151f11617f0bd878611a0db91023a9:
+    mspid: f94cb52579151f11617f0bd878611a0db91023a9MSP
+
+    cryptoPath:  C:/work/version/JavaSDKDemo/config/f94cb52579151f11617f0bd878611a0db91023a9.peer/msp
+    tlsCryptoKeyPath: C:/work/version/JavaSDKDemo/config/f94cb52579151f11617f0bd878611a0db91023a9.peer/tls/server.key
+    tlsCryptoCertPath: C:/work/version/JavaSDKDemo/config/f94cb52579151f11617f0bd878611a0db91023a9.peer/tls/server.crt
+
+    peers:
+      
+      - peer-f94cb52579151f11617f0bd878611a0db91023a9-0.peer-f94cb52579151f11617f0bd878611a0db91023a9.default.svc.cluster.local
+      
+    certificateAuthorities:
+      - ca-org1
+  
+  ordererorg:
+      mspID: "7c831bd2b71123b12f5ab4b5f1d633a8bbc784ddMSP"
+
+      cryptoPath: C:/work/version/JavaSDKDemo/config/7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd.orderer/msp
+orderer-eip: 49.4.95.169
+orderers:
+  
+  orderer-7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd-0.orderer-7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd.default.svc.cluster.local:
+    url: grpcs://49.4.95.169:30805
+
+    grpcOptions:
+      ssl-target-name-override: orderer-7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd-0.orderer-7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd.default.svc.cluster.local
+      grpc-max-send-message-length: 15
+      sslProvider: openSSL
+      negotiationType: TLS
+      hostnameOverride: orderer-7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd-0.orderer-7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd.default.svc.cluster.local
+
+    tlsCACerts:
+      path: C:/work/version/JavaSDKDemo/config/7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd.orderer/msp/tlscacerts/tlsca.7c831bd2b71123b12f5ab4b5f1d633a8bbc784dd-cert.pem
+  
+peers:
+  
+  peer-f94cb52579151f11617f0bd878611a0db91023a9-0.peer-f94cb52579151f11617f0bd878611a0db91023a9.default.svc.cluster.local:
+    url: grpcs://49.4.95.169:30605
+
+    eventUrl: grpcs://49.4.95.169:30705
+
+    grpcOptions:
+      ssl-target-name-override: peer-f94cb52579151f11617f0bd878611a0db91023a9-0.peer-f94cb52579151f11617f0bd878611a0db91023a9.default.svc.cluster.local
+      grpc.http2.keepalive_time: 15
+      sslProvider: openSSL
+      negotiationType: TLS
+      hostnameOverride: peer-f94cb52579151f11617f0bd878611a0db91023a9-0.peer-f94cb52579151f11617f0bd878611a0db91023a9.default.svc.cluster.local
+
+    tlsCACerts:
+      path: C:/work/version/JavaSDKDemo/config/f94cb52579151f11617f0bd878611a0db91023a9.peer/msp/tlscacerts/tlsca.f94cb52579151f11617f0bd878611a0db91023a9-cert.pem
+  
+certificateAuthorities:
+  ca-org1:
+    url: https://ca_peerOrg1:7054
+    httpOptions:
+      verify: true
+    tlsCACerts:
+      path: $GOPATH/src/github.com/hyperledger/fabric-sdk-go/test/api-server/tls/fabricca/certs/ca_root.pem
+      client:
+       keyfile: $GOPATH/src/github.com/hyperledger/fabric-sdk-go/test/api-server/tls/fabricca/certs/client/client_fabric_client-key.pem
+       certfile: $GOPATH/src/github.com/hyperledger/fabric-sdk-go/test/api-server/tls/fabricca/certs/client/client_fabric_client.pem
+
+    registrar:
+      enrollId: admin
+      enrollSecret: adminpw
+    caName: ca-org1
